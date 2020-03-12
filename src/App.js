@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
 import Dropdown from "react-dropdown";
 import parse from "html-react-parser";
-import fetchShow from './api/fetchShow'
 
+import { getEpisodes } from "./api/episodesService";
 import { formatSeasons } from "./utils/formatSeasons";
 
 import Episodes from "./components/Episodes";
@@ -16,27 +15,14 @@ export default function App() {
   const episodes = seasons[selectedSeason] || [];
 
   useEffect(() => {
-    fetchShow()
+    getEpisodes()
       .then(res => {
-        setShow(res.data)
-        console.log('setShow', res.data)
+        console.log(res.data);
+        setShow(res.data);
         setSeasons(formatSeasons(res.data._embedded.episodes));
       })
-  }, [])
-
-  // useEffect(() => {
-  //   const fetchShow = () => {
-  //     axios
-  //       .get(
-  //         "https://api.tvmaze.com/singlesearch/shows?q=stranger-things&embed=episodes"
-  //       )
-  //       .then(res => {
-  //         setShow(res.data);
-  //         setSeasons(formatSeasons(res.data._embedded.episodes));
-  //       });
-  //   };
-  //   fetchShow();
-  // }, []);
+      .catch(err => console.log(err));
+  }, []);
 
   const handleSelect = e => {
     setSelectedSeason(e.value);
@@ -48,10 +34,12 @@ export default function App() {
 
   return (
     <div className="App">
+      {console.log(show)}
       <img className="poster-img" src={show.image.original} alt={show.name} />
       <h1>{show.name}</h1>
       {parse(show.summary)}
       <Dropdown
+        data-testid="dropDown"
         options={Object.keys(seasons)}
         onChange={handleSelect}
         value={selectedSeason || "Select a season"}
