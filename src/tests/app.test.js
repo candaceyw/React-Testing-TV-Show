@@ -22,12 +22,12 @@ test('renders the app ', () => {
 
 test('correct episodes populate when you select a season', async () => {
  
+    act(() => {
 
-   
-    mockFetchEpisodes.mockResolvedValueOnce(data)
-
-
-
+        mockFetchEpisodes.mockResolvedValueOnce(data)
+        
+    })
+    // mockFetchEpisodes.mockResolvedValueOnce(data)
    
     const {getByTestId, getByText} = render(<App />)
     await wait( () => {getByText(/Select a season/i)} )
